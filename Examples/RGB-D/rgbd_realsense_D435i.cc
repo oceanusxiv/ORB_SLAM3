@@ -169,11 +169,11 @@ int main(int argc, char **argv) {
     rs2::config cfg;
 
     // RGB stream
-    cfg.enable_stream(RS2_STREAM_COLOR,1280, 720, RS2_FORMAT_RGB8, 30);
+    cfg.enable_stream(RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_RGB8, 30);
 
     // Depth stream
     // cfg.enable_stream(RS2_STREAM_INFRARED, 1, 640, 480, RS2_FORMAT_Y8, 30);
-    cfg.enable_stream(RS2_STREAM_DEPTH,1280, 720, RS2_FORMAT_Z16, 30);
+    cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 30);
 
     // IMU stream
     cfg.enable_stream(RS2_STREAM_ACCEL, RS2_FORMAT_MOTION_XYZ32F); //, 250); // 63
@@ -318,16 +318,18 @@ int main(int argc, char **argv) {
 
     while (!SLAM.isShutDown())
     {
+	if (!b_continue_session) {
+	    SLAM.Shutdown();
+	}
+#ifdef COMPILEDWITHC11
+            std::chrono::steady_clock::time_point t_Start_Process = std::chrono::steady_clock::now();
+#else
+            std::chrono::monotonic_clock::time_point t_Start_Process = std::chrono::monotonic_clock::now();
+#endif
         {
             std::unique_lock<std::mutex> lk(imu_mutex);
             if(!image_ready)
                 cond_image_rec.wait(lk);
-
-#ifdef COMPILEDWITHC11
-            std::chrono::steady_clock::time_point time_Start_Process = std::chrono::steady_clock::now();
-#else
-            std::chrono::monotonic_clock::time_point time_Start_Process = std::chrono::monotonic_clock::now();
-#endif
 
             fs = fsSLAM;
 
