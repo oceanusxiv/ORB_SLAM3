@@ -173,6 +173,12 @@ void LocalMapping::Run()
                     vnLBA_KFopt.push_back(num_OptKF_BA);
                     vnLBA_KFfixed.push_back(num_FixedKF_BA);
                     vnLBA_MPs.push_back(num_MPs_BA);
+                } else {
+                    vdLBA_ms.push_back(0.0);
+                    vnLBA_edges.push_back(0);
+                    vnLBA_KFopt.push_back(0);
+                    vnLBA_KFfixed.push_back(0);
+                    vnLBA_MPs.push_back(0);
                 }
 
 #endif
